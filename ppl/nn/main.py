@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch
 import time
 import os
 from detrain.ppl.args_util import get_args
@@ -25,7 +26,13 @@ if __name__=="__main__":
     # Check devices
     if (args.gpu is not None):
         device = "cuda:0"
+
+    for i in range(torch.cuda.device_count()):
+        print(torch.cuda.get_device_properties(i).name)
     
+    print(device)
+    exit(0)
+
     # Define optimizer & loss_fn
     loss_fn = nn.CrossEntropyLoss()
     optimizer_class = optim.SGD
