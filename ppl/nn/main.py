@@ -25,7 +25,7 @@ if __name__=="__main__":
 
     # Check devices
     if (args.gpu is not None):
-        device = "cuda:0"
+        device = "cuda"
 
     for i in range(torch.cuda.device_count()):
         print(torch.cuda.get_device_properties(i).name)
