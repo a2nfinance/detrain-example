@@ -16,14 +16,15 @@ if __name__=="__main__":
     epochs = int(args.epochs)
     batch_size = int(args.batch_size)
     lr = float(args.lr)
-
+    # Check cuda device
     for i in range(torch.cuda.device_count()):
         print(torch.cuda.get_device_properties(i).name)
 
     devices = []
     workers = []
     shards = [NNShard1, NNShard2]
-    # Check devices
+    
+    # Devices for model shards
     if (args.gpu is not None):
         arr = args.gpu.split('_')
         for dv in range(len(arr)):
@@ -33,8 +34,7 @@ if __name__=="__main__":
                     devices.append("cuda:0")
                 else:
                     devices.append("cpu")
-    if (rank > 0):
-        print("Tesla P40")
+
     # Define optimizer & loss_fn
     loss_fn = nn.CrossEntropyLoss()
     optimizer_class = optim.SGD
