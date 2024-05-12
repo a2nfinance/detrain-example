@@ -9,17 +9,19 @@ from shards_model import NNShard1, NNShard2
 import torch.optim as optim
 
 if __name__=="__main__":
+    # Get torchrun args
     args = get_args()
-    # Get args
     world_size = int(os.environ["WORLD_SIZE"])
     rank = int(os.environ["RANK"])
     epochs = int(args.epochs)
     batch_size = int(args.batch_size)
     lr = float(args.lr)
+
     # Check cuda device
     for i in range(torch.cuda.device_count()):
         print(torch.cuda.get_device_properties(i).name)
 
+    # Define params to create a new instance of DistributedModel
     devices = []
     workers = []
     shards = [NNShard1, NNShard2]
@@ -46,8 +48,11 @@ if __name__=="__main__":
     
     print(f"World_size: {world_size}, Rank: {rank}")
     
+    # batch to mini batches
     num_split = 4
     tik = time.time()
+
+    # Start a master node & worker nodes
     run_worker(
         rank, 
         world_size, 
@@ -65,5 +70,6 @@ if __name__=="__main__":
         batch_size,
         lr
     )
+
     tok = time.time()
     print(f"number of splits = {num_split}, execution time = {tok - tik}")
